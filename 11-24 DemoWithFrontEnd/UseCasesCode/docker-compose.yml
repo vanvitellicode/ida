@@ -1,0 +1,36 @@
+version: '3'
+services:
+  train_model:
+    build:
+      context: ./src/usecase2
+    volumes:
+      - ./data:/app/data
+      - ./resources:/app/resources
+    environment:
+      - MODEL_TYPE=${MODEL_TYPE}
+    command: python3 2ndUseCase.py
+
+  use_model:
+    build:
+      context: ./src/usecase1
+    volumes:
+      - ./data:/app/data
+      - ./resources:/app/resources
+      - ./results:/app/results
+    environment:
+      - MODEL_TYPE=${MODEL_TYPE}
+    command: python3 1stUseCase.py
+
+  frontend:
+    build:
+      context: ./src/frontend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./resources:/app/resources
+      - ./results:/app/results
+    depends_on:
+      - train_model
+      - use_model
+    command: python3 app.py

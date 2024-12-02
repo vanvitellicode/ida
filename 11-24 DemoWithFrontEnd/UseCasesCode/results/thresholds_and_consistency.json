@@ -1,0 +1,1 @@
+{"belief_logistic+lr": {"threshold": 0.449, "consistent": true, "p_value": 1.0}, "disbelief_logistic+lr": {"threshold": 0.36, "consistent": true, "p_value": 1.0}}

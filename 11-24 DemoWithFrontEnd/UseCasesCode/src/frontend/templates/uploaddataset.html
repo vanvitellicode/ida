@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Dataset</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="file"] {
+            margin-top: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .back-button {
+            background-color: #2196F3;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #1e87e5;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Upload Datasets</h1>
+    <form action="/uploaddataset" method="post" enctype="multipart/form-data">
+        <label for="train_file">Select Train File:</label>
+        <input type="file" id="train_file" name="train_file">
+
+        <label for="test_file">Select Test File:</label>
+        <input type="file" id="test_file" name="test_file">
+
+        <label for="use_file">Select Use File:</label>
+        <input type="file" id="use_file" name="use_file">
+
+        <button type="submit">Upload Files</button>
+    </form>
+    <a href="/" class="back-button">Back to Model Evaluation</a>
+</body>
+
+</html>

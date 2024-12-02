@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interfaccia Modello</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylehome.css') }}">
+</head>
+
+<body>
+  <!-- Navigation Section -->
+  <header>
+    <nav>
+      {% if session.get('user') %}
+      <p>Benvenuto, {{ session['user']['email'] }} (Ruolo: {{ session['user']['role'] }})</p>
+      <p><a href="{{ url_for('logout') }}">Logout</a> |
+      <p><a href="{{ url_for('uploaddataset') }}">Cambia Dataset</a></p>
+      {% else %}
+      <p><a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Registrati</a></p>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  <section class="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+      <li class="flash {{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+  </section>
+
+  <!-- Action and Model Selection -->
+  <main>
+    <h1>Seleziona il Tipo di Azione e il Modello</h1>
+    <form action="{{ url_for('run_script') }}" method="post">
+      <label for="action">Scegli l'azione:</label>
+      <select name="action" id="action" required>
+        {% if session['user']['role'] in ['Programmatore', 'Admin'] %}
+        <option value="train">Train</option>
+        <option value="test">Test</option>
+        {% endif %}
+        {% if session['user']['role'] in ['Tester', 'Admin'] %}
+        <option value="use">Use</option>
+        {% endif %}
+      </select>
+      <br><br>
+
+      <label for="model_type">Scegli il tipo di modello:</label>
+      <select name="model_type" id="model_type" required>
+        <option value="logistic">Logistic Regression</option>
+        <option value="mlp">MLP Classifier</option>
+      </select>
+      <br><br>
+
+      <button type="submit">Esegui</button>
+    </form>
+
+    <!-- Test Results and PDFs -->
+    <section class="test-results">
+      <h2>Risultati del Test:</h2>
+      {% if pdf_exists_belief %}
+      <p><a href="{{ url_for('view_pdf', pdf_type='belief') }}" target="_blank">Visualizza Risultati Test Belief
+          (PDF)</a></p>
+      {% endif %}
+
+      {% if pdf_exists_disbelief %}
+      <p><a href="{{ url_for('view_pdf', pdf_type='disbelief') }}" target="_blank">Visualizza Risultati Test Disbelief
+          (PDF)</a></p>
+      {% endif %}
+    </section>
+
+    <!-- Display Metrics or Thresholds -->
+    <section class="metrics">
+      <h2>Misure del Test o Soglie:</h2>
+      {% if test_metrics %}
+      {% if 'belief' in test_metrics and 'f1_binary' in test_metrics['belief'] %}
+      <div class="metrics-belief">
+        <h3>Belief</h3>
+        <ul>
+          <li>F1 Binary: {{ test_metrics['belief']['f1_binary'] }}</li>
+          <li>F1 Macro: {{ test_metrics['belief']['f1_macro'] }}</li>
+          <li>F1 Micro: {{ test_metrics['belief']['f1_micro'] }}</li>
+        </ul>
+      </div>
+      <div class="metrics-disbelief">
+        <h3>Disbelief</h3>
+        <ul>
+          <li>F1 Binary: {{ test_metrics['disbelief']['f1_binary'] }}</li>
+          <li>F1 Macro: {{ test_metrics['disbelief']['f1_macro'] }}</li>
+          <li>F1 Micro: {{ test_metrics['disbelief']['f1_micro'] }}</li>
+        </ul>
+      </div>
+      {% elif 'belief_logistic+lr' in test_metrics %}
+      <div class="thresholds">
+        <h3>Soglie e Consistenza</h3>
+        <ul>
+          <li>Soglia Belief: {{ test_metrics['belief_logistic+lr']['threshold'] }}</li>
+          <li>Consistenza Belief: {{ test_metrics['belief_logistic+lr']['consistent'] }}</li>
+          <li>Soglia Disbelief: {{ test_metrics['disbelief_logistic+lr']['threshold'] }}</li>
+          <li>Consistenza Disbelief: {{ test_metrics['disbelief_logistic+lr']['consistent'] }}</li>
+        </ul>
+      </div>
+      {% else %}
+      <p>Nessun dato disponibile.</p>
+      {% endif %}
+      {% endif %}
+    </section>
+  </main>
+</body>
+
+</html>

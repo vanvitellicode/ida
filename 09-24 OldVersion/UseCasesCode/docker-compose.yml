@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  train_model:
+    build:
+      context: ./src/usecase2
+    volumes:
+      - .data:/app/data
+      - .resources:/app/resources
+    command: python3 2ndUseCase_trainModel_DONE.py
+
+  use_model:
+    build:
+      context: ./src/usecase1
+    volumes:
+      - .data:/app/data
+      - .resources:/app/resources
+      - .results:/app/results
+    command: python3 1stUseCase_useModel_DONE.py

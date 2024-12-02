@@ -1,0 +1,13 @@
+FROM python:3
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN python -m nltk.downloader words
+RUN apt-get update && apt-get install -y cmake
+RUN apt-get install -y pkg-config libsentencepiece-dev
+
+
+CMD ["python", "2ndUseCase.py"]

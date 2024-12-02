@@ -1,0 +1,1 @@
+{"belief_mlp+lr": {"threshold": 0.554, "consistent": true, "p_value": 1.0}, "disbelief_mlp+lr": {"threshold": 0.432, "consistent": true, "p_value": 1.0}}
